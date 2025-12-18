@@ -1,30 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { onAuthChange } from '@/lib/auth'
-import { User as FirebaseUser } from 'firebase/auth'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar, Dumbbell, Users, TrendingUp, Activity, Clock } from 'lucide-react'
+import { useAuth } from '@/hooks'
 
 export default function Home() {
-  const [user, setUser] = useState<FirebaseUser | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    const unsubscribe = onAuthChange((user) => {
-      setUser(user)
-      setLoading(false)
-      if (user) {
-        router.push('/dashboard')
-      }
-    })
-
-    return () => unsubscribe()
-  }, [router])
+    if (user) {
+      router.push('/dashboard')
+    }
+  }, [user, router])
 
   if (loading) {
     return (
