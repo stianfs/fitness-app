@@ -20,7 +20,7 @@ async function getUserFromRequest(request: NextRequest) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getUserFromRequest(request)
@@ -32,7 +32,8 @@ export async function GET(
       )
     }
 
-    const workoutDoc = await adminDb.collection('workouts').doc(params.id).get()
+    const { id } = await params
+    const workoutDoc = await adminDb.collection('workouts').doc(id).get()
 
     if (!workoutDoc.exists) {
       return NextResponse.json(
@@ -65,7 +66,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getUserFromRequest(request)
@@ -77,7 +78,8 @@ export async function PUT(
       )
     }
 
-    const workoutDoc = await adminDb.collection('workouts').doc(params.id).get()
+    const { id } = await params
+    const workoutDoc = await adminDb.collection('workouts').doc(id).get()
 
     if (!workoutDoc.exists) {
       return NextResponse.json(
@@ -96,7 +98,7 @@ export async function PUT(
     }
 
     const data = await request.json()
-    await adminDb.collection('workouts').doc(params.id).update({
+    await adminDb.collection('workouts').doc(id).update({
       ...data,
       updatedAt: new Date(),
     })
@@ -113,7 +115,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getUserFromRequest(request)
@@ -125,7 +127,8 @@ export async function DELETE(
       )
     }
 
-    const workoutDoc = await adminDb.collection('workouts').doc(params.id).get()
+    const { id } = await params
+    const workoutDoc = await adminDb.collection('workouts').doc(id).get()
 
     if (!workoutDoc.exists) {
       return NextResponse.json(
@@ -143,7 +146,7 @@ export async function DELETE(
       )
     }
 
-    await adminDb.collection('workouts').doc(params.id).delete()
+    await adminDb.collection('workouts').doc(id).delete()
 
     return NextResponse.json({ success: true })
   } catch (error: any) {

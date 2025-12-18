@@ -4,8 +4,6 @@ const nextConfig = {
   images: {
     domains: ['firebasestorage.googleapis.com'],
   },
-  // Enable SWC minification for better performance
-  swcMinify: true,
   // Enable standalone output for Docker
   output: 'standalone',
 }
